@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JEE Advanced 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .widget {
+      background: #111;
+      border-radius: 24px;
+      padding: 20px;
+      width: 320px;
+      border: 1px solid #222;
+    }
+    .label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #f97316;
+      margin-bottom: 2px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+    }
+    .days-left {
+      font-size: 64px;
+      font-weight: 900;
+      color: #f97316;
+      line-height: 1;
+    }
+    .days-label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+    }
+    .clock {
+      text-align: right;
+    }
+    .clock-time {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: monospace;
+      color: #fff;
+    }
+    .clock-secs {
+      font-size: 14px;
+      color: #555;
+      font-family: monospace;
+    }
+    .clock-label {
+      font-size: 10px;
+      color: #555;
+      margin-top: 2px;
+    }
+    .progress-wrap {
+      margin-bottom: 16px;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .progress-bar-bg {
+      background: #222;
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #ea580c, #fdba74);
+      transition: width 1s ease;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .stat-val.green { color: #4ade80; }
+    .stat-val.orange { color: #f97316; }
+    .stat-val.blue { color: #60a5fa; }
+    .stat-lbl {
+      font-size: 9px;
+      color: #555;
+      margin-top: 3px;
+    }
+    .grid-wrap {
+      background: #1a1a1a;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+    .grid-title {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .day-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+    .day-cell {
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+    }
+    .day-cell.past    { background: #333; }
+    .day-cell.done    { background: #4ade80; }
+    .day-cell.today   { background: #f97316; }
+    .day-cell.future  { background: #1f2937; border: 1px solid #2d3748; }
+    .legend {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      color: #555;
+    }
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+    }
+    .quote {
+      background: #1a0d05;
+      border: 1px solid #431407;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 11px;
+      color: #fb923c;
+      font-style: italic;
+      line-height: 1.5;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="widget">
+  <div class="label">Countdown</div>
+  <div class="title">JEE Advanced 2026</div>
+
+  <div class="main-row">
+    <div>
+      <div class="days-left" id="daysLeft">--</div>
+      <div class="days-label">days remaining</div>
+    </div>
+    <div class="clock">
+      <div class="clock-label">Current time</div>
+      <div class="clock-time" id="clockHM">--:--</div>
+      <div class="clock-secs" id="clockS">:--</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="elapsed">-- days elapsed</span>
+      <span id="pct">--%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-box">
+      <div class="stat-val green" id="statStudied">0</div>
+      <div class="stat-lbl">Days studied</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val orange" id="statLeft">--</div>
+      <div class="stat-lbl">Days left</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val blue" id="statWeeks">--</div>
+      <div class="stat-lbl">Weeks left</div>
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="grid-title">Day Grid — tap to mark studied</div>
+    <div class="day-grid" id="dayGrid"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#4ade80"></div>Studied</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>Today</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1f2937;border:1px solid #2d3748"></div>Upcoming</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#333"></div>Past</div>
+    </div>
+  </div>
+
+  <div class="quote" id="quote"></div>
+</div>
+
+<script>
+  const EXAM = new Date('2026-05-17T00:00:00');
+  const MS_DAY = 864e5;
+  const QUOTES = [
+    "Every day studied is a day closer to IIT.",
+    "The exam doesn't care about your mood. Show up anyway.",
+    "Small consistent effort beats last-minute cramming.",
+    "Rank 1 also started from Day 1.",
+    "Discipline is choosing future you over present you.",
+    "Hard days build the mental toughness the exam demands.",
+    "You don't need motivation. You need commitment.",
+    "One more topic mastered. One step closer.",
+  ];
+
+  const startOfToday = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+  const TODAY = startOfToday();
+  const TOTAL_DAYS = Math.ceil((EXAM - TODAY) / MS_DAY);
+
+  let checked = JSON.parse(localStorage.getItem('jee_checked') || '{}');
+
+  document.getElementById('quote').textContent =
+    `"${QUOTES[Math.floor(Math.random() * QUOTES.length)]}"`;
+
+  function buildGrid() {
+    const grid = document.getElementById('dayGrid');
+    grid.innerHTML = '';
+    const daysPassed = Math.ceil((startOfToday() - TODAY) / MS_DAY);
+    for (let i = 0; i < TOTAL_DAYS; i++) {
+      const el = document.createElement('div');
+      el.className = 'day-cell ' +
+        (i < daysPassed ? (checked[i] ? 'done' : 'past')
+        : i === daysPassed ? 'today'
+        : checked[i] ? 'done' : 'future');
+      el.title = `Day ${i + 1}`;
+      if (i >= daysPassed) {
+        el.style.cursor = 'pointer';
+        el.onclick = () => {
+          checked[i] = !checked[i];
+          localStorage.setItem('jee_checked', JSON.stringify(checked));
+          buildGrid();
+          updateStats();
+        };
+      }
+      grid.appendChild(el);
+    }
+  }
+
+  function updateStats() {
+    const now = new Date();
+    const daysLeft = Math.max(0, Math.ceil((EXAM - now) / MS_DAY));
+    const daysPassed = TOTAL_DAYS - daysLeft;
+    const pct = Math.round((daysPassed / TOTAL_DAYS) * 100);
+    const studied = Object.values(checked).filter(Boolean).length;
+
+    document.getElementById('daysLeft').textContent = daysLeft;
+    document.getElementById('elapsed').textContent = `${daysPassed} days elapsed`;
+    document.getElementById('pct').textContent = `${pct}%`;
+    document.getElementById('bar').style.width = pct + '%';
+    document.getElementById('statStudied').textContent = studied;
+    document.getElementById('statLeft').textContent = daysLeft;
+    document.getElementById('statWeeks').textContent = Math.ceil(daysLeft / 7);
+  }
+
+  function tick() {
+    const now = new Date();
+    const hm = now.toTimeString().slice(0,5);
+    const ss = ':' + String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clockHM').textContent = hm;
+    document.getElementById('clockS').textContent = ss;
+    updateStats();
+  }
+
+  buildGrid();
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
